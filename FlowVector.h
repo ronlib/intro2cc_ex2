@@ -11,8 +11,11 @@ class FlowVector
 
 	std::vector<Flow>::iterator find_flow(	const unsigned short int src_ip[4], long int src_port,
 																					const unsigned short int dst_ip[4], long int dst_port);
+
+	std::vector<Flow>::iterator find_flow(const Flow& f);
 	void add_flow(const Flow& flow);
-	std::vector<Flow>::iterator get_iterator();
+	std::vector<Flow>::iterator iterator();
+	std::vector<Flow>::iterator end();
 
  private:
 	std::vector<Flow> flow_vector_;

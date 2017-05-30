@@ -32,7 +32,10 @@ int main(int argc, char *argv[])
 	unsigned long int pkt_src_port;
 	unsigned short int pkt_dst_ip[4];
 	unsigned long int pkt_dst_port;
-	unsigned long int pkt_priority;
+	unsigned long int pkt_length;
+	unsigned long int pkt_weight;
+
+	FlowVector fv;
 
 	while (std::getline(infile, line))
 		{
@@ -45,7 +48,25 @@ int main(int argc, char *argv[])
 			line_ss >> pkt_dst_ip[0] >> dot >> pkt_dst_ip[1] >> dot >>
 				pkt_dst_ip[2] >> dot >> pkt_dst_ip[3];
 			line_ss >> pkt_dst_port;
+			line_ss >> pkt_length;
+			// All should work up here
+			Flow flow = Flow(pkt_src_ip, pkt_src_port, pkt_dst_ip, pkt_dst_port);
+			std::vector<Flow>::iterator found_flow = fv.find_flow(flow);
+			if (found_flow == fv.end())
+				{
+					// This is a new flow
+					line_ss >> pkt_weight;
+					if (line_ss.good())
+						{
+							flow.weight = pkt_weight;
+						}
+					else
+						{
+							flow.weight = pkt_weight;
+						}
 
+					fv.add_flow(flow);
+				}
 
 			++line_counter;
 

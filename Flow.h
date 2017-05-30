@@ -21,7 +21,7 @@ public:
 	unsigned long int src_port;
 	unsigned short int dst_ip[4];
 	unsigned long int dst_port;
-	unsigned long int priority;
+	unsigned long int weight;
 
 	bool operator==(const Flow&) const;
 

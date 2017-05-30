@@ -3,13 +3,19 @@
 #include "FlowVector.h"
 #include "Flow.h"
 
-std::vector<Flow>::iterator FlowVector::get_iterator()
+std::vector<Flow>::iterator FlowVector::iterator()
 {
 	return this->flow_vector_.begin();
 }
 
+std::vector<Flow>::iterator FlowVector::end()
+{
+	return this->flow_vector_.end();
+}
+
 Flow::Flow(const unsigned short int src_ip[4], long int src_port,
 					 const unsigned short int dst_ip[4], long int dst_port)
+	:weight(0)
 {
 	std::memcpy(this->src_ip, src_ip, sizeof(this->src_ip));
 	std::memcpy(this->dst_ip, dst_ip, sizeof(this->src_ip));
@@ -23,6 +29,11 @@ std::vector<Flow>::iterator FlowVector::find_flow(const unsigned short int src_i
 {
 	return std::find(this->flow_vector_.begin(), this->flow_vector_.end(),
 									 Flow(src_ip, src_port, dst_ip, dst_port));
+}
+
+std::vector<Flow>::iterator FlowVector::find_flow(const Flow& f)
+{
+	return std::find(this->flow_vector_.begin(), this->flow_vector_.end(), f);
 }
 
 void FlowVector::add_flow(const Flow& flow)
@@ -39,7 +50,7 @@ Flow::Flow():
 	src_port(0),
 	dst_ip{},
 	dst_port(0),
-	priority(0)
+	weight(0)
 {};
 
 
