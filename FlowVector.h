@@ -8,12 +8,14 @@
 class FlowVector
 {
  public:
-	FlowVector();
-	FlowState& find_or_add_flow(Flow&);
-	std::vector<Flow> get_iterator();
+
+	std::vector<Flow>::iterator find_flow(	const unsigned short int src_ip[4], long int src_port,
+																					const unsigned short int dst_ip[4], long int dst_port);
+	void add_flow(const Flow& flow);
+	std::vector<Flow>::iterator get_iterator();
 
  private:
-	std::vector <Flow> flow_vector_;
+	std::vector<Flow> flow_vector_;
 
 };
 

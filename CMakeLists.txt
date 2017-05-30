@@ -3,3 +3,4 @@ project(ex2)
 
 # first we add the executable that generates the table
 add_executable(sch main.cpp Flow.cpp)
+add_executable(test_flowvector test_flowvector.cpp Flow.cpp)

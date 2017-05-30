@@ -1,4 +1,35 @@
+#include <algorithm>
+#include <cstring>
+#include "FlowVector.h"
 #include "Flow.h"
+
+std::vector<Flow>::iterator FlowVector::get_iterator()
+{
+	return this->flow_vector_.begin();
+}
+
+Flow::Flow(const unsigned short int src_ip[4], long int src_port,
+					 const unsigned short int dst_ip[4], long int dst_port)
+{
+	std::memcpy(this->src_ip, src_ip, sizeof(this->src_ip));
+	std::memcpy(this->dst_ip, dst_ip, sizeof(this->src_ip));
+	this->src_port = src_port;
+	this->dst_port = dst_port;
+}
+
+
+std::vector<Flow>::iterator FlowVector::find_flow(const unsigned short int src_ip[4], long int src_port,
+																			const unsigned short int dst_ip[4], long int dst_port)
+{
+	return std::find(this->flow_vector_.begin(), this->flow_vector_.end(),
+									 Flow(src_ip, src_port, dst_ip, dst_port));
+}
+
+void FlowVector::add_flow(const Flow& flow)
+{
+	this->flow_vector_.push_back(flow);
+}
+
 
 FlowState::FlowState(): credit(0)
 {};
@@ -10,3 +41,17 @@ Flow::Flow():
 	dst_port(0),
 	priority(0)
 {};
+
+
+bool Flow::operator==(const Flow& b) const
+{
+	bool result = true;
+	result = result && std::equal(std::begin(this->src_ip), std::end(this->src_ip),
+												 std::begin(b.src_ip), std::end(b.src_ip));
+	result = result && std::equal(std::begin(this->dst_ip), std::end(this->dst_ip),
+												std::begin(b.dst_ip), std::end(b.dst_ip));
+	result = result && this->src_port==b.src_port;
+	result = result && this->dst_port==b.dst_port;
+
+	return result;
+}
