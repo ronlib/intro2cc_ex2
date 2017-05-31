@@ -66,3 +66,7 @@ bool Flow::operator==(const Flow& b) const
 
 	return result;
 }
+
+Packet::Packet(unsigned short length, unsigned long pktID)
+	: length(length), pktID(pktID)
+{}

@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 	stringstream ss;
 	ss << argv[4] << ' ' << argv[5];
 
-	std::string scheculer(argv[1]), input_file_path(argv[2]), output_file_path(argv[3]);
+	std::string scheduler(argv[1]), input_file_path(argv[2]), output_file_path(argv[3]);
 	int default_weight = 0, quantum = 0;
 
 	ss >> default_weight;
@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
 	unsigned long int pkt_dst_port;
 	unsigned long int pkt_length;
 	unsigned long int pkt_weight;
+	unsigned long int current_time = 0;
 
 	FlowVector fv;
 
@@ -67,6 +68,9 @@ int main(int argc, char *argv[])
 
 					fv.add_flow(flow);
 				}
+
+
+
 
 			++line_counter;
 

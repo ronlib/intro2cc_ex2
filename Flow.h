@@ -3,10 +3,18 @@
 
 #include <vector>
 
+struct Packet
+{
+public:
+	unsigned short length;
+	unsigned long pktID;
+	Packet(unsigned short length, unsigned long pktID);
+};
+
 struct FlowState
 {
 	unsigned long int credit;
-	std::vector<unsigned short> packetlist;
+	std::vector<Packet> packetlist;
 
 	public:
 	FlowState();
