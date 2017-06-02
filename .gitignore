@@ -1,0 +1,9 @@
+*~
+CMakeCache.txt
+CMakeFiles/*
+Makefile
+cmake_install.cmake
+inp1.txt
+sch
+test_flowvector
+test_packetreader
