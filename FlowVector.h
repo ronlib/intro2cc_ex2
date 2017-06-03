@@ -16,6 +16,9 @@ class FlowVector
 	void add_flow(const Flow& flow);
 	std::vector<Flow>::iterator iterator();
 	std::vector<Flow>::iterator end();
+	unsigned long int count_packets();
+
+	void add_credit(const unsigned int quantum);
 
  private:
 	std::vector<Flow> flow_vector_;

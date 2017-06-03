@@ -3,9 +3,12 @@
 #include <string>
 #include <cstdlib>
 #include <fstream>
+#include <iterator>
 
 #include "Flow.h"
 #include "FlowVector.h"
+#include "PacketReader.h"
+#include "PacketWriter.h"
 
 
 using namespace std;
@@ -21,62 +24,116 @@ int main(int argc, char *argv[])
 	ss >> default_weight;
 	ss >> quantum;
 
-	std::string line;
-	std::ifstream infile(input_file_path);
-	int line_counter = 0;
-	char dot;
-	long int time = 0;
-	long int pkt_time = 0;
-	long int pktID = 0;
-	unsigned short int pkt_src_ip[4];
-	unsigned long int pkt_src_port;
-	unsigned short int pkt_dst_ip[4];
-	unsigned long int pkt_dst_port;
-	unsigned long int pkt_length;
-	unsigned long int pkt_weight;
-	unsigned long int current_time = 0;
+	FlowVector fv = FlowVector();
+	PacketReader pr = PacketReader(input_file_path, fv, default_weight);
+	PacketWriter pw = PacketWriter(output_file_path);
 
-	FlowVector fv;
+	unsigned long int time = 0;
+	// unsigned long int sending_until = 0;
+	// bool read_res = true;
 
-	while (std::getline(infile, line))
-		{
-			stringstream line_ss(line);
-			line_ss >> pktID;
-			line_ss >> pkt_time;
-			line_ss >> pkt_src_ip[0] >> dot >> pkt_src_ip[1] >> dot >>
-				pkt_src_ip[2] >> dot >> pkt_src_ip[3];
-			line_ss >> pkt_src_port;
-			line_ss >> pkt_dst_ip[0] >> dot >> pkt_dst_ip[1] >> dot >>
-				pkt_dst_ip[2] >> dot >> pkt_dst_ip[3];
-			line_ss >> pkt_dst_port;
-			line_ss >> pkt_length;
-			// All should work up here
-			Flow flow = Flow(pkt_src_ip, pkt_src_port, pkt_dst_ip, pkt_dst_port);
-			std::vector<Flow>::iterator found_flow = fv.find_flow(flow);
-			if (found_flow == fv.end())
-				{
-					// This is a new flow
-					line_ss >> pkt_weight;
-					if (line_ss.good())
-						{
-							flow.weight = pkt_weight;
-						}
-					else
-						{
-							flow.weight = pkt_weight;
-						}
+	vector<Flow>::iterator fi = fv.iterator(); // Flow iterator
 
-					fv.add_flow(flow);
-				}
+	while (!pr.has_reached_eof() || fv.count_packets() > 0)
+	{
+		if (fv.count_packets() == 0)
+			{
+				time = pr.next_packet_time();
+				pr.read_until(time);
+				fi = fv.iterator();
+			}
+
+		bool packet_sent = false;
+		while (!packet_sent)
+			{
+				if ((*fi).state.packetlist.size() > 0)
+					{
+						(*fi).state.credit += (*fi).weight*quantum;
+
+						if ((*fi).state.credit > (*fi).state.packetlist.front().length)
+							{
+								pw.write_packet((*fi).state.packetlist.front().pktID, time);
+								(*fi).state.credit -= (*fi).state.packetlist.front().length;
+								(*fi).state.packetlist.erase((*fi).state.packetlist.begin());
+								time = time + (*fi).state.packetlist.front().length;
+								unsigned long int index = fi - fv.iterator();
+								pr.read_until(time);
+								fi = fv.iterator();
+								advance(fi, index);
+								packet_sent = true;
+								break;
+							}
+					}
+				else
+					{
+						(*fi).state.credit = 0;
+					}
+
+				++fi;
+				if (fi == fv.end())
+					{
+						fi = fv.iterator();
+					}
+			}
+	}
+
+	// while ((read_res=pr.read_until(time)))
+	// 	{
+	// 		// fv.add_credit(quantum);
+	// 		bool sending = false;
+
+	// 		if (sending_until <= time)
+	// 			{
+
+	// 				sending = false;
+	// 				// Check for the first flow to have enough credit to send
+	// 				vector<Flow>::iterator starting_fi = fi;
+	// 				do
+	// 					{
+	// 						if ((*fi).state.packetlist.size() > 0)
+	// 							{
+	// 								(*fi).state.credit += (*fi).weight*quantum;
+
+	// 								if ((*fi).state.credit > (*fi).state.packetlist.front().length)
+	// 									{
+	// 										pw.write_packet((*fi).state.packetlist.front().pktID, time);
+	// 										(*fi).state.credit -= (*fi).state.packetlist.front().length;
+	// 										(*fi).state.packetlist.erase((*fi).state.packetlist.begin());
+
+	// 										if ((*fi).state.packetlist.size() == 0)
+	// 											{
+	// 												(*fi).state.credit = 0;
+	// 											}
+
+	// 										sending_until = time + (*fi).state.packetlist.front().length;
+	// 										sending = true;
+	// 									}
+	// 							}
+
+	// 						if (!sending)
+	// 							{
+	// 								++fi;
+	// 								if (fi == fv.end())
+	// 									// starting from the beginning of the vector
+	// 									{
+	// 										fi = starting_fi;
+	// 									}
+	// 							}
+	// 					} while (!sending && starting_fi != fi);
 
 
+	// 				if (!sending)
+	// 					// Meaning there was no flow with enough credit
+	// 					{
+
+	// 					}
 
 
-			++line_counter;
-
-		}
+	// 			}
 
 
-	cout << "Read " << line_counter << " lines" << endl;
+	// 		++time;
+	// 	}
+
 	return 0;
 }

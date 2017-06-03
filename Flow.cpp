@@ -3,6 +3,8 @@
 #include "FlowVector.h"
 #include "Flow.h"
 
+using namespace std;
+
 std::vector<Flow>::iterator FlowVector::iterator()
 {
 	return this->flow_vector_.begin();
@@ -70,3 +72,25 @@ bool Flow::operator==(const Flow& b) const
 Packet::Packet(unsigned short length, unsigned long pktID)
 	: length(length), pktID(pktID)
 {}
+
+
+void FlowVector::add_credit(const unsigned int quantum)
+{
+	for (vector<Flow>::iterator t_fi = this->iterator() ; t_fi != this->end() ; ++t_fi)
+		{
+			if ((*t_fi).state.packetlist.size() > 0)
+				{
+					(*t_fi).state.credit += (*t_fi).weight*quantum;
+				}
+		}
+
+}
+
+unsigned long int FlowVector::count_packets()
+{
+	unsigned long int counter;
+	for (vector<Flow>::iterator t_fi = this->iterator() ; t_fi != this->end() ; ++t_fi)
+		{
+			counter += (*t_fi).state.packetlist.size();
+		}
+}

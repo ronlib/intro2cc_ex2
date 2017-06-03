@@ -25,7 +25,10 @@ int main(int argc, char *argv[])
 	FlowVector fv = FlowVector();
 	PacketReader pr = PacketReader(input_file_path, fv, default_weight);
 
-	bool res = pr.read_until(7);
+	bool res = pr.read_until(21);
+	res = pr.read_until(21);
+
+	res = pr.read_until(100);
 
 	return 0;
 }
