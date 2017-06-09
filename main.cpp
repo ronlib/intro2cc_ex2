@@ -48,20 +48,24 @@ int main(int argc, char *argv[])
 			{
 				if ((*fi).state.packetlist.size() > 0)
 					{
-						(*fi).state.credit += (*fi).weight*quantum;
 
-						if ((*fi).state.credit > (*fi).state.packetlist.front().length)
+					if (!packet_sent)
+						{
+							(*fi).state.credit += (*fi).weight*quantum;
+						}
+
+					while ((*fi).state.packetlist.size() > 0 &&
+								 (*fi).state.credit >= (*fi).state.packetlist.front().length)
 							{
 								pw.write_packet((*fi).state.packetlist.front().pktID, time);
 								(*fi).state.credit -= (*fi).state.packetlist.front().length;
-								(*fi).state.packetlist.erase((*fi).state.packetlist.begin());
 								time = time + (*fi).state.packetlist.front().length;
+								(*fi).state.packetlist.erase((*fi).state.packetlist.begin());
 								unsigned long int index = fi - fv.iterator();
 								pr.read_until(time);
 								fi = fv.iterator();
 								advance(fi, index);
 								packet_sent = true;
-								break;
 							}
 					}
 				else

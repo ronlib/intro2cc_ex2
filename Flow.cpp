@@ -88,9 +88,11 @@ void FlowVector::add_credit(const unsigned int quantum)
 
 unsigned long int FlowVector::count_packets()
 {
-	unsigned long int counter;
+	unsigned long int counter = 0;
 	for (vector<Flow>::iterator t_fi = this->iterator() ; t_fi != this->end() ; ++t_fi)
 		{
 			counter += (*t_fi).state.packetlist.size();
 		}
+
+	return counter;
 }
