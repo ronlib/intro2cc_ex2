@@ -81,9 +81,9 @@ int main(int argc, char *argv[])
 							}
 
 						while ((*fi).state.packetlist.size() > 0 &&
-									 (drr && (*fi).state.credit >= (*fi).state.packetlist.front().length
+									 ((drr && (*fi).state.credit >= (*fi).state.packetlist.front().length)
 										||
-										!drr && (*fi).state.credit > 0)
+										(!drr && (*fi).state.credit > 0))
 									 )
 							{
 								pw.write_packet((*fi).state.packetlist.front().pktID, time);

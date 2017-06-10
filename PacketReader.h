@@ -15,8 +15,8 @@ class PacketReader
 
  private:
 	void parse_line(std::stringstream& line_ss,
-									long int& pkt_time,
-									long int& pktID,
+									unsigned long int& pkt_time,
+									unsigned long int& pktID,
 									unsigned short int pkt_src_ip[4],
 									unsigned long int& pkt_src_port,
 									unsigned short int pkt_dst_ip[4],

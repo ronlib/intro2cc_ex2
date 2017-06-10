@@ -9,9 +9,9 @@ using namespace std;
 PacketReader::PacketReader(const std::string& file_path, FlowVector& fv,
 													 unsigned long int default_weight)
 	: last_read_time_(0),
-		default_weight_(default_weight),
 		fv_(fv),
 		infile_(file_path),
+		default_weight_(default_weight),
 		eof_(false)
 {
 	if (this->infile_.fail())
@@ -24,17 +24,14 @@ PacketReader::PacketReader(const std::string& file_path, FlowVector& fv,
 bool PacketReader::read_until(unsigned long int time)
 {
 	std::string line;
-	int line_counter = 0;
-	char dot;
-	long int pkt_time = 0;
-	long int pktID = 0;
+	long unsigned int pkt_time = 0;
+	long unsigned int pktID = 0;
 	unsigned short int pkt_src_ip[4];
 	unsigned long int pkt_src_port;
 	unsigned short int pkt_dst_ip[4];
 	unsigned long int pkt_dst_port;
 	unsigned long int pkt_length;
 	unsigned long int pkt_weight;
-	unsigned long int current_time = 0;
 
 	streampos prev_line_pos;
 	bool error = false, eof = false;
@@ -58,8 +55,8 @@ bool PacketReader::read_until(unsigned long int time)
 				}
 
 			stringstream line_ss(line);
-			this->parse_line(line_ss, pkt_time, pktID, pkt_src_ip, pkt_src_port, pkt_dst_ip, pkt_dst_port,
-											 pkt_length);
+			this->parse_line(line_ss, pkt_time, pktID, pkt_src_ip, pkt_src_port,
+											 pkt_dst_ip, pkt_dst_port, pkt_length);
 
 			if (pkt_time > time)
 				{
@@ -109,15 +106,13 @@ bool PacketReader::has_reached_eof()
 
 unsigned long int PacketReader::next_packet_time()
 {
-	long int pkt_time;
-	long int pktID;
+	unsigned long int pkt_time;
+	unsigned long int pktID;
 	unsigned short int pkt_src_ip[4];
 	unsigned long int pkt_src_port;
 	unsigned short int pkt_dst_ip[4];
 	unsigned long int pkt_dst_port;
 	unsigned long int pkt_length;
-	unsigned long int pkt_weight;
-
 
 	streampos prev_line_pos;
 	string line;
@@ -140,13 +135,13 @@ unsigned long int PacketReader::next_packet_time()
 }
 
 void PacketReader::parse_line(std::stringstream& line_ss,
-									long int& pkt_time,
-									long int& pktID,
-									unsigned short int pkt_src_ip[4],
-									unsigned long int& pkt_src_port,
-									unsigned short int pkt_dst_ip[4],
-									unsigned long int& pkt_dst_port,
-									unsigned long int& pkt_length)
+															unsigned long int& pkt_time,
+															unsigned long int& pktID,
+															unsigned short int pkt_src_ip[4],
+															unsigned long int& pkt_src_port,
+															unsigned short int pkt_dst_ip[4],
+															unsigned long int& pkt_dst_port,
+															unsigned long int& pkt_length)
 {
 	char dot;
 	line_ss >> pktID;
