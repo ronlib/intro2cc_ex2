@@ -69,7 +69,7 @@ bool PacketReader::read_until(unsigned long int time)
 				{
 					// This is a new flow
 					line_ss >> pkt_weight;
-					if (line_ss.good())
+					if (!line_ss.fail())
 						{
 							flow.weight = pkt_weight;
 						}
