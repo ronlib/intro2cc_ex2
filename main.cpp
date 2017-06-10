@@ -20,17 +20,29 @@ int main(int argc, char *argv[])
 
 	std::string scheduler(argv[1]), input_file_path(argv[2]), output_file_path(argv[3]);
 	int default_weight = 0, quantum = 0;
+	bool drr = false;
 
 	ss >> default_weight;
 	ss >> quantum;
+
+	if (scheduler == "DRR")
+		{
+			drr = true;
+		}
+	else if (scheduler == "RR")
+		{
+			drr = false;
+		}
+	else
+		{
+			throw invalid_argument("Scheduler type is not DRR or RR");
+		}
 
 	FlowVector fv = FlowVector();
 	PacketReader pr = PacketReader(input_file_path, fv, default_weight);
 	PacketWriter pw = PacketWriter(output_file_path);
 
 	unsigned long int time = 0;
-	// unsigned long int sending_until = 0;
-	// bool read_res = true;
 
 	vector<Flow>::iterator fi = fv.iterator(); // Flow iterator
 
@@ -51,28 +63,52 @@ int main(int argc, char *argv[])
 			}
 
 		bool packet_sent = false;
+
 		while (!packet_sent)
 			{
 				if ((*fi).state.packetlist.size() > 0)
 					{
-
-					if (!packet_sent)
-						{
-							(*fi).state.credit += (*fi).weight*quantum;
-						}
-
-					while ((*fi).state.packetlist.size() > 0 &&
-								 (*fi).state.credit >= (*fi).state.packetlist.front().length)
+						if (drr)
 							{
-								pw.write_packet((*fi).state.packetlist.front().pktID, time);
-								(*fi).state.credit -= (*fi).state.packetlist.front().length;
-								time = time + (*fi).state.packetlist.front().length;
-								(*fi).state.packetlist.erase((*fi).state.packetlist.begin());
-								unsigned long int index = fi - fv.iterator();
-								pr.read_until(time);
-								fi = fv.iterator();
-								advance(fi, index);
-								packet_sent = true;
+								if (!packet_sent)
+									{
+										(*fi).state.credit += (*fi).weight*quantum;
+									}
+
+								while ((*fi).state.packetlist.size() > 0 &&
+											 (*fi).state.credit >= (*fi).state.packetlist.front().length)
+									{
+										pw.write_packet((*fi).state.packetlist.front().pktID, time);
+										(*fi).state.credit -= (*fi).state.packetlist.front().length;
+										time = time + (*fi).state.packetlist.front().length;
+										(*fi).state.packetlist.erase((*fi).state.packetlist.begin());
+										unsigned long int index = fi - fv.iterator();
+										pr.read_until(time);
+										fi = fv.iterator();
+										advance(fi, index);
+										packet_sent = true;
+									}
+							}
+						else
+							{
+								if (!packet_sent)
+									{
+										(*fi).state.credit = (*fi).weight;
+									}
+
+								while ((*fi).state.packetlist.size() > 0 &&
+											 (*fi).state.credit > 0)
+									{
+										pw.write_packet((*fi).state.packetlist.front().pktID, time);
+										(*fi).state.credit -= 1;
+										time = time + (*fi).state.packetlist.front().length;
+										(*fi).state.packetlist.erase((*fi).state.packetlist.begin());
+										unsigned long int index = fi - fv.iterator();
+										pr.read_until(time);
+										fi = fv.iterator();
+										advance(fi, index);
+										packet_sent = true;
+									}
 							}
 					}
 				else
