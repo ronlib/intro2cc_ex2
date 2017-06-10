@@ -21,12 +21,24 @@
     <ClInclude Include="Flow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PacketWriter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PacketReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Flow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PacketWriter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
