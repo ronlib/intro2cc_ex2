@@ -21,10 +21,14 @@
   <ItemGroup>
     <ClInclude Include="Flow.h" />
     <ClInclude Include="FlowVector.h" />
+    <ClInclude Include="PacketReader.h" />
+    <ClInclude Include="PacketWriter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Flow.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PacketReader.cpp" />
+    <ClCompile Include="PacketWriter.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -81,19 +85,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>$sch</TargetName>
+    <TargetName>sch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>$sch</TargetName>
+    <TargetName>sch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>$sch</TargetName>
+    <TargetName>sch</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>$sch</TargetName>
+    <TargetName>sch</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
