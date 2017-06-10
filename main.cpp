@@ -68,48 +68,38 @@ int main(int argc, char *argv[])
 			{
 				if ((*fi).state.packetlist.size() > 0)
 					{
-						if (drr)
+						if (!packet_sent)
 							{
-								if (!packet_sent)
+								if (drr)
 									{
 										(*fi).state.credit += (*fi).weight*quantum;
 									}
-
-								while ((*fi).state.packetlist.size() > 0 &&
-											 (*fi).state.credit >= (*fi).state.packetlist.front().length)
-									{
-										pw.write_packet((*fi).state.packetlist.front().pktID, time);
-										(*fi).state.credit -= (*fi).state.packetlist.front().length;
-										time = time + (*fi).state.packetlist.front().length;
-										(*fi).state.packetlist.erase((*fi).state.packetlist.begin());
-										unsigned long int index = fi - fv.iterator();
-										pr.read_until(time);
-										fi = fv.iterator();
-										advance(fi, index);
-										packet_sent = true;
-									}
-							}
-						else
-							{
-								if (!packet_sent)
+								else
 									{
 										(*fi).state.credit = (*fi).weight;
 									}
-
-								while ((*fi).state.packetlist.size() > 0 &&
-											 (*fi).state.credit > 0)
-									{
-										pw.write_packet((*fi).state.packetlist.front().pktID, time);
-										(*fi).state.credit -= 1;
-										time = time + (*fi).state.packetlist.front().length;
-										(*fi).state.packetlist.erase((*fi).state.packetlist.begin());
-										unsigned long int index = fi - fv.iterator();
-										pr.read_until(time);
-										fi = fv.iterator();
-										advance(fi, index);
-										packet_sent = true;
-									}
 							}
+
+						while ((*fi).state.packetlist.size() > 0 &&
+									 (drr && (*fi).state.credit >= (*fi).state.packetlist.front().length
+										||
+										!drr && (*fi).state.credit > 0)
+									 )
+							{
+								pw.write_packet((*fi).state.packetlist.front().pktID, time);
+								if (drr)
+									(*fi).state.credit -= (*fi).state.packetlist.front().length;
+								else
+									(*fi).state.credit -= 1;
+								time = time + (*fi).state.packetlist.front().length;
+								(*fi).state.packetlist.erase((*fi).state.packetlist.begin());
+								unsigned long int index = fi - fv.iterator();
+								pr.read_until(time);
+								fi = fv.iterator();
+								advance(fi, index);
+								packet_sent = true;
+							}
+
 					}
 				else
 					{
