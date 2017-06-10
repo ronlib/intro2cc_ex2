@@ -21,7 +21,7 @@ class PacketReader
 									unsigned long int& pkt_src_port,
 									unsigned short int pkt_dst_ip[4],
 									unsigned long int& pkt_dst_port,
-									unsigned long int& pkt_length);
+									unsigned short int& pkt_length);
 	unsigned long int last_read_time_;
 	FlowVector& fv_;
 	std::ifstream infile_;

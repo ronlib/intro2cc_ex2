@@ -30,7 +30,7 @@ bool PacketReader::read_until(unsigned long int time)
 	unsigned long int pkt_src_port;
 	unsigned short int pkt_dst_ip[4];
 	unsigned long int pkt_dst_port;
-	unsigned long int pkt_length;
+	unsigned short int pkt_length;
 	unsigned long int pkt_weight;
 
 	streampos prev_line_pos;
@@ -112,7 +112,7 @@ unsigned long int PacketReader::next_packet_time()
 	unsigned long int pkt_src_port;
 	unsigned short int pkt_dst_ip[4];
 	unsigned long int pkt_dst_port;
-	unsigned long int pkt_length;
+	unsigned short int pkt_length;
 
 	streampos prev_line_pos;
 	string line;
@@ -141,7 +141,7 @@ void PacketReader::parse_line(std::stringstream& line_ss,
 															unsigned long int& pkt_src_port,
 															unsigned short int pkt_dst_ip[4],
 															unsigned long int& pkt_dst_port,
-															unsigned long int& pkt_length)
+															unsigned short int& pkt_length)
 {
 	char dot;
 	line_ss >> pktID;
