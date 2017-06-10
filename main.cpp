@@ -38,7 +38,14 @@ int main(int argc, char *argv[])
 	{
 		if (fv.count_packets() == 0)
 			{
-				time = pr.next_packet_time();
+				try
+					{
+						time = pr.next_packet_time();
+					}
+				catch (...)
+					{
+						break;
+					}
 				pr.read_until(time);
 				fi = fv.iterator();
 			}

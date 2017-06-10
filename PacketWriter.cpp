@@ -12,6 +12,7 @@ PacketWriter::PacketWriter(const std::string& file_path)
 
 void PacketWriter::write_packet(const unsigned int pktID, const unsigned int time)
 {
-	outfile_ << time << ": " << pktID << endl;
-	cout << time << ": " << pktID << endl;
+	outfile_ << time << ": " << pktID << "\r\n";
+	// TODO: remove
+	// cout << time << ": " << pktID << endl;
 }
