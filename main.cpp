@@ -103,6 +103,11 @@ int main(int argc, char *argv[])
 					}
 				else
 					{
+						// (*fi).state.credit = 0;
+					}
+
+				if ((*fi).state.packetlist.size() == 0)
+					{
 						(*fi).state.credit = 0;
 					}
 
