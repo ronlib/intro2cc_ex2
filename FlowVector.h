@@ -19,6 +19,7 @@ class FlowVector
 	unsigned long int count_packets();
 
 	void add_credit(const unsigned int quantum);
+	void zero_credit();
 
  private:
 	std::vector<Flow> flow_vector_;

@@ -96,3 +96,12 @@ unsigned long int FlowVector::count_packets()
 
 	return counter;
 }
+
+
+void FlowVector::zero_credit()
+{
+	for (vector<Flow>::iterator t_fi = this->iterator() ; t_fi != this->end() ; ++t_fi)
+		{
+			(*t_fi).state.credit = 0;
+		}
+}

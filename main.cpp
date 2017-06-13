@@ -58,6 +58,7 @@ int main(int argc, char *argv[])
 					{
 						break;
 					}
+				fv.zero_credit();
 				pr.read_until(time);
 				fi = fv.iterator();
 			}
